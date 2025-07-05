@@ -31,23 +31,28 @@ export const getSupabaseClient = (): SupabaseClient => {
 
 const createMockClient = () => {
   return {
-    from: () => ({
-      select: () => Promise.resolve({ data: [], error: null }),
-      insert: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-      order: () => Promise.resolve({ data: [], error: null })
+    from: (table: string) => ({
+      select: (columns?: string) => ({
+        order: (column: string, options?: { ascending?: boolean }) => 
+          Promise.resolve({ data: [], error: { message: 'Supabase not configured' } })
+      }),
+      insert: (data: any) => ({
+        select: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
+      })
     }),
     storage: {
-      from: () => ({
-        upload: () => Promise.resolve({ error: { message: 'Supabase not configured' } }),
-        getPublicUrl: () => ({ data: { publicUrl: '' } })
+      from: (bucket: string) => ({
+        upload: (path: string, file: File) => 
+          Promise.resolve({ error: { message: 'Supabase not configured' } }),
+        getPublicUrl: (path: string) => ({ data: { publicUrl: '' } })
       })
     },
-    channel: () => ({
-      on: () => ({
+    channel: (name: string) => ({
+      on: (event: string, filter: any, callback: any) => ({
         subscribe: () => ({})
       })
     }),
-    removeChannel: () => {}
+    removeChannel: (channel: any) => {}
   } as any
 }
 

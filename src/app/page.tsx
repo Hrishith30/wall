@@ -27,18 +27,28 @@ export default function Home() {
 
   // Real-time subscription
   useEffect(() => {
-    const client = supabase()
-    const channel = client
-      .channel('posts')
-      .on('postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'posts' },
-        (payload) => {
-          setPosts(current => [payload.new as Post, ...current])
-        }
-      )
-      .subscribe()
+    try {
+      const client = supabase()
+      const channel = client
+        .channel('posts')
+        .on('postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'posts' },
+          (payload) => {
+            setPosts(current => [payload.new as Post, ...current])
+          }
+        )
+        .subscribe()
 
-    return () => { client.removeChannel(channel) }
+      return () => { 
+        try {
+          client.removeChannel(channel) 
+        } catch (err) {
+          console.error('Error removing channel:', err)
+        }
+      }
+    } catch (err) {
+      console.error('Error setting up real-time subscription:', err)
+    }
   }, [])
 
   // Update current time every minute for time display
@@ -61,6 +71,7 @@ export default function Home() {
       if (error) {
         if (error.message === 'Supabase not configured') {
           setError('App is not properly configured. Please check environment variables.')
+          setPosts([]) // Set empty posts array when not configured
         } else {
           setError(`Failed to load posts: ${error.message}`)
         }
@@ -73,6 +84,7 @@ export default function Home() {
     } catch (err) {
       console.error('Exception in fetchPosts:', err)
       setError('Exception while fetching posts')
+      setPosts([]) // Set empty posts array on exception
     }
   }
 
