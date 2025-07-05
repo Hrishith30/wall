@@ -24,7 +24,8 @@ export default function Home() {
 
   // Real-time subscription
   useEffect(() => {
-    const channel = supabase
+    const client = supabase()
+    const channel = client
       .channel('posts')
       .on('postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'posts' },
@@ -34,7 +35,7 @@ export default function Home() {
       )
       .subscribe()
 
-    return () => { supabase.removeChannel(channel) }
+    return () => { client.removeChannel(channel) }
   }, [])
 
   // Update current time every minute for time display
@@ -48,7 +49,8 @@ export default function Home() {
 
   const fetchPosts = async () => {
     try {
-      const { data, error } = await supabase
+      const client = supabase()
+      const { data, error } = await client
         .from('posts')
         .select('*')
         .order('created_at', { ascending: false })
@@ -78,11 +80,12 @@ export default function Home() {
       
       // Upload image if selected
       if (selectedImage) {
+        const client = supabase()
         const fileExt = selectedImage.name.split('.').pop()
         const fileName = `${Math.random()}.${fileExt}`
         const filePath = `post-images/${fileName}`
         
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await client.storage
           .from('post-images')
           .upload(filePath, selectedImage)
         
@@ -94,7 +97,7 @@ export default function Home() {
         }
         
         // Get public URL
-        const { data: urlData } = supabase.storage
+        const { data: urlData } = client.storage
           .from('post-images')
           .getPublicUrl(filePath)
         
@@ -102,7 +105,8 @@ export default function Home() {
       }
       
       // Create post with image URL if available
-      const { data, error } = await supabase
+      const client = supabase()
+      const { data, error } = await client
         .from('posts')
         .insert({ 
           body: message.trim(),
