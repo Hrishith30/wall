@@ -59,7 +59,11 @@ export default function Home() {
         .order('created_at', { ascending: false })
       
       if (error) {
-        setError(`Failed to load posts: ${error.message}`)
+        if (error.message === 'Supabase not configured') {
+          setError('App is not properly configured. Please check environment variables.')
+        } else {
+          setError(`Failed to load posts: ${error.message}`)
+        }
         console.error('Error fetching posts:', error)
       } else if (data) {
         setPosts(data)
@@ -255,7 +259,26 @@ export default function Home() {
             {/* Error Display */}
             {error && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                {error}
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <h3 className="text-sm font-medium text-red-800">
+                      Configuration Error
+                    </h3>
+                    <div className="mt-2 text-sm text-red-700">
+                      <p>{error}</p>
+                      {error.includes('environment variables') && (
+                        <p className="mt-1">
+                          This app requires Supabase configuration. Please check your environment variables.
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
