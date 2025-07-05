@@ -4,6 +4,9 @@ import { useState, useEffect, useRef } from 'react'
 import { supabase, Post } from '@/lib/supabase'
 import { Share, Image as ImageIcon, User, Calendar, MapPin, Heart, MessageCircle, Share2, X } from 'lucide-react'
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   const [message, setMessage] = useState('')
   const [posts, setPosts] = useState<Post[]>([])
