@@ -211,7 +211,7 @@ export default function Home() {
   // Show loading screen while fetching initial data
   if (isPageLoading) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center safe-area-top safe-area-bottom">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <h2 className="text-xl font-semibold text-gray-700">Loading your wall...</h2>
@@ -221,10 +221,10 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 safe-area-top safe-area-bottom">
-      {/* Mobile Header */}
+    <div className="min-h-screen bg-gray-100">
+      {/* Header */}
       <div className="bg-blue-600 text-white shadow-md shadow-black/20 lg:rounded-b-lg">
-        <div className="container-mobile py-3">
+        <div className="px-4 py-3 lg:px-6 lg:py-4 max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
             {/* Mobile Menu Button */}
             <button 
@@ -245,12 +245,12 @@ export default function Home() {
 
       {/* Mobile Sidebar Overlay */}
       <div 
-        className={`overlay-mobile ${sidebarOpen ? 'open' : ''}`}
+        className={`lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={closeSidebar}
       ></div>
 
       {/* Mobile Sidebar */}
-      <div className={`sidebar-mobile ${sidebarOpen ? 'open' : ''}`}>
+      <div className={`lg:hidden fixed top-0 left-0 h-full w-80 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-4">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-blue-600">Profile</h2>
@@ -264,7 +264,7 @@ export default function Home() {
           </div>
           
           {/* Profile Info */}
-          <div className="bg-white rounded-lg shadow-mobile mb-4 overflow-hidden">
+          <div className="bg-white rounded-lg shadow-md lg:shadow-lg mb-4 overflow-hidden">
             <div className="w-full aspect-square bg-blue-500 flex items-center justify-center overflow-hidden">
               <img 
                 src="/Hrishith.jpeg" 
@@ -306,11 +306,11 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="container-mobile py-4 lg:py-6">
-        <div className="flex-mobile gap-6">
+      <div className="px-4 py-4 lg:px-6 lg:py-6 max-w-7xl mx-auto pb-20 lg:pb-6">
+        <div className="flex flex-col lg:flex-row gap-6">
           {/* Desktop Sidebar - Hidden on mobile */}
           <div className="hidden lg:block w-80 flex-shrink-0">
-            <div className="bg-white rounded-lg shadow-mobile mb-4 overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md lg:shadow-lg mb-4 overflow-hidden">
               <div className="w-full aspect-square bg-blue-500 flex items-center justify-center overflow-hidden">
                 <img 
                   src="/Hrishith.jpeg" 
@@ -379,7 +379,7 @@ export default function Home() {
             )}
 
             {/* Post Creation */}
-            <div className="bg-white rounded-lg shadow-mobile p-4 mb-4">
+            <div className="bg-white rounded-lg shadow-md lg:shadow-lg p-4 mb-4">
               <div className="flex items-start space-x-3 mb-4">
                 <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                   <img 
@@ -408,7 +408,7 @@ export default function Home() {
                       }
                     }}
                     placeholder="What's on your mind?"
-                    className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500 placeholder-font-medium text-black break-words whitespace-pre-wrap min-h-[120px] hover:border-blue-400 transition-colors duration-200 text-mobile"
+                                         className="w-full p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-500 placeholder-font-medium text-black break-words whitespace-pre-wrap min-h-[120px] hover:border-blue-400 transition-colors duration-200 text-sm lg:text-base"
                     rows={3}
                     maxLength={280}
                   />
@@ -475,7 +475,7 @@ export default function Home() {
             {/* Posts Feed */}
             <div className="space-y-4 lg:space-y-5">
               {posts.map((post) => (
-                <div key={post.id} className="bg-white rounded-lg shadow-mobile p-4 lg:p-5 hover:shadow-lg transition-shadow duration-200">
+                <div key={post.id} className="bg-white rounded-lg shadow-md lg:shadow-lg p-4 lg:p-5 hover:shadow-xl transition-shadow duration-200">
                   <div className="flex items-start space-x-3 lg:space-x-4 mb-3">
                     <div className="w-10 h-10 lg:w-11 lg:h-11 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden">
                       <img 
@@ -521,18 +521,18 @@ export default function Home() {
                 </div>
               ))}
               
-              {posts.length === 0 && (
-                <div className="bg-white rounded-lg shadow-mobile p-6 lg:p-8 text-center">
-                  <p className="text-gray-500 text-mobile">No posts yet. Be the first to share something!</p>
-                </div>
-              )}
+                             {posts.length === 0 && (
+                 <div className="bg-white rounded-lg shadow-md lg:shadow-lg p-6 lg:p-8 text-center">
+                   <p className="text-gray-500 text-sm lg:text-base">No posts yet. Be the first to share something!</p>
+                 </div>
+               )}
             </div>
           </div>
         </div>
       </div>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="nav-mobile safe-area-bottom">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
         <div className="flex justify-around items-center">
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
